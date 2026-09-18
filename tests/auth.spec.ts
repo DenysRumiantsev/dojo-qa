@@ -8,7 +8,7 @@ type TestUser = {
   password: string;
 }
 
-let user: TestUser;
+
 
 function createNewUserData(): TestUser {
   return {
@@ -26,6 +26,8 @@ test.describe('registration', () => {
   });
 
   test.beforeAll(async ({ page }) => {
+    let user: TestUser;
+
     user = createNewUserData();
   });
 
@@ -58,7 +60,7 @@ test.describe('registration', () => {
   test('HW5-3-Registration non-unique user is rejected', async ({ page }) => {
 
     await page.getByTestId('nav-sign-up').click();
-    await page.getByTestId('auth-username').fill(user.userName);
+    await page.getByTestId('auth-username').fill('Olena');
     await page.getByTestId('auth-email').fill("olena@example.com");
     await page.getByTestId('auth-password').fill('qwerty');
     await page.getByTestId('register-confirm-password').fill('qwerty');
@@ -82,7 +84,9 @@ test.describe('login', () => {
   });
 
   test.beforeAll(async ({ page }) => {
+    let user: TestUser;
     user = createNewUserData();
+    
     await page.goto('');
     await page.getByTestId('nav-sign-up').click();
     await expect(page.getByRole('heading', { name: 'Create an account' })).toBeVisible();
