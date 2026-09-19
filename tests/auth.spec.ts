@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, Page } from '@playwright/test';
 import { faker } from '@faker-js/faker'
 
 
@@ -6,9 +6,7 @@ type TestUser = {
   userName: string;
   email: string;
   password: string;
-}
-
-
+};
 
 function createNewUserData(): TestUser {
   return {
@@ -16,21 +14,34 @@ function createNewUserData(): TestUser {
     email: faker.internet.email(),
     password: faker.internet.password(),
   }
+};
+
+async function registerUser(page: Page, user: TestUser) {
+  await page.getByTestId('nav-sign-up').click();
+  await expect(page.getByRole('heading', { name: 'Create an account' })).toBeVisible();
+
+  await page.getByTestId('auth-username').fill(user.userName);
+  await page.getByTestId('auth-email').fill(user.email);
+  await page.getByTestId('auth-password').fill(user.password);
+  await page.getByTestId('register-confirm-password').fill(user.password)
+
+  await page.getByTestId('register-terms').check();
+  await page.getByTestId('auth-submit').click();
+
+  await expect(page.getByTestId('nav-profile')).toContainText(user.userName);
+  await page.getByTestId('nav-profile').click();
+  await page.getByRole('link', { name: 'Edit profile' }).click();
+  await page.getByTestId('logout-button').click();
+  await expect(page.getByTestId('nav-sign-in')).toBeVisible();
 }
 
-
 test.describe('registration', () => {
+  let user: TestUser;
 
   test.beforeEach(async ({ page }) => {
     await page.goto(''); //baseUrl
-  });
-
-  test.beforeAll(async ({ page }) => {
-    let user: TestUser;
-
     user = createNewUserData();
   });
-
 
   test('HW5-1-Register New user is successful', async ({ page }) => {
     await page.getByTestId('nav-sign-up').click();
@@ -58,7 +69,6 @@ test.describe('registration', () => {
   });
 
   test('HW5-3-Registration non-unique user is rejected', async ({ page }) => {
-
     await page.getByTestId('nav-sign-up').click();
     await page.getByTestId('auth-username').fill('Olena');
     await page.getByTestId('auth-email').fill("olena@example.com");
@@ -73,35 +83,15 @@ test.describe('registration', () => {
 
 });
 
-
-
-
 test.describe('login', () => {
-
+  let user: TestUser;
 
   test.beforeEach(async ({ page }) => {
     await page.goto(''); //baseUrl
-  });
-
-  test.beforeAll(async ({ page }) => {
-    let user: TestUser;
     user = createNewUserData();
-    
-    await page.goto('');
-    await page.getByTestId('nav-sign-up').click();
-    await expect(page.getByRole('heading', { name: 'Create an account' })).toBeVisible();
-
-    await page.getByTestId('auth-username').fill(user.userName);
-    await page.getByTestId('auth-email').fill(user.email);
-    await page.getByTestId('auth-password').fill(user.password);
-    await page.getByTestId('register-confirm-password').fill(user.password)
-
-    await page.getByTestId('register-terms').check();
-    await page.getByTestId('auth-submit').click();
-
-
-
+    await registerUser(page, user)
   });
+
 
   test('HW5-4-registeded user can successfuly login', async ({ page }) => {
     await page.getByTestId('nav-sign-in').click();
@@ -133,8 +123,5 @@ test.describe('login', () => {
 
     await expect(page.getByTestId('error-messages').getByRole('paragraph')).toContainText('email or password неправильні');
   });
-
-
-
 
 });
