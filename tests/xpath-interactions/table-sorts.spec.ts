@@ -43,6 +43,11 @@ test.describe("xPath-table-sort-tests", () => {
         
         await expect(page.locator(checkedCounter)).toHaveText("Вибрано: 1");
 
+        await page.locator("//input[@aria-label='Вибрати Завантаження файлу']").click(); 
+        await expect(page.locator(checkedCounter)).toHaveText("Вибрано: 2");
+        await page.locator("//input[@aria-label='Вибрати Завантаження файлу']").click();
+        await expect(page.locator(checkedCounter)).toHaveText("Вибрано: 1"); 
+
     });
     
 
