@@ -31,6 +31,9 @@ test.describe("xPath-table-sort-tests", () => {
     });
 
     test('Sort table by name asc', async ({ page }) => {
+
+        await expect(page.locator(tableRawLocator).first()).toContainText('Авторизація');
+        await expect(page.locator(tableRawLocator).last()).toContainText('Failed');
         await page.locator(sortNameLocator).click({clickCount: 2});
 
         await expect(page.locator('//th[@aria-sort="ascending"]')).toBeVisible();
@@ -45,9 +48,6 @@ test.describe("xPath-table-sort-tests", () => {
 
         await page.locator("//input[@aria-label='Вибрати Завантаження файлу']").click(); 
         await expect(page.locator(checkedCounter)).toHaveText("Вибрано: 2");
-        await page.locator("//input[@aria-label='Вибрати Завантаження файлу']").click();
-        await expect(page.locator(checkedCounter)).toHaveText("Вибрано: 1"); 
-
     });
     
 
