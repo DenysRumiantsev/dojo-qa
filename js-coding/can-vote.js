@@ -1,3 +1,6 @@
+export const canVoteMessage = "Користувач може голосувати";
+export const cannotVoteMessage = "Користувач не може голосувати";
+
 export function canVote(age) {
 
     if (typeof age !== "number") {
@@ -9,9 +12,9 @@ export function canVote(age) {
     
     if (age < 18) {
         console.log(`Повертайся через ${(18 * 365) - (age * 365)} Днів`)
-        return (false)
+        return cannotVoteMessage;
     }
     else {
-        return (true)
+        return canVoteMessage;
     };
 };
