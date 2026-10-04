@@ -15,13 +15,22 @@ test('negative age  cannot vote', () => {
     expect(canVote(-19)).toBe(cannotVoteMessage);
 });
 
+test('0 age cannot vote', () => {
+    expect(canVote(0)).toBe(cannotVoteMessage);
+});
+
+test('17 age cannot vote', () => {
+    expect(canVote(17)).toBe(cannotVoteMessage);
+});
+
 test('18 age can vote', () => {
     expect(canVote(18)).toBe(canVoteMessage);
 });
 
-test('older then 18 age can vote', () => {
-    expect(canVote(33)).toBe(canVoteMessage);
+test('19 age can vote', () => {
+    expect(canVote(19)).toBe(canVoteMessage);
 });
+
 
 test('NaN is handled by CanVote', () => { 
     expect(() => canVote(NaN)).toThrow("Передайте число")  

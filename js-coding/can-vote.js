@@ -1,5 +1,5 @@
-export const canVoteMessage = "Користувач може голосувати";
-export const cannotVoteMessage = "Користувач не може голосувати";
+export const canVoteMessage = "Ви можете голосувати.";
+export const cannotVoteMessage = "Ви ще не можете голосувати.";
 
 export function canVote(age) {
 
